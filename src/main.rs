@@ -4,10 +4,12 @@ mod prompt;
 
 use api::Handle;
 use prompt::*;
+use model::Trello;
 
 fn main() {
     println!("Welcome to Trello CLI!");
-    let mut api = Handle::from_file();
+
+    let mut t = Trello::new();
 
     // Main loop
     loop {
@@ -16,10 +18,7 @@ fn main() {
         use Command::*;
         match command {
             ListBoards => {
-                let names = api.get_list_boards();
-                for name in names {
-                    println!("{}", name.0);
-                }
+                display_boards(&t);
             }
             Quit => break,
             Help => {

@@ -37,16 +37,16 @@ impl Handle {
         Handle {key, token, boards: HashMap::new()}
     }
 
-    pub fn get_list_boards(&mut self) -> &HashMap<String, String> {
-        if self.boards.is_empty() {
-            self.find_boards();
-        }
+    // pub fn get_list_boards(&mut self) -> &HashMap<String, String> {
+    //     if self.boards.is_empty() {
+    //         self.find_boards();
+    //     }
 
-        &self.boards
-    }
+    //     &self.boards
+    // }
 
     // Prints list of boards from user
-    fn find_boards(&mut self) {
+    pub fn find_boards(&mut self) -> HashMap<String, String> {
         let url = format!("https://api.trello.com/1/members/me/boards/?key={key}&token={token}",
                 key = self.key,
                 token = self.token);
@@ -68,6 +68,6 @@ impl Handle {
             }
         }
 
-        self.boards = names_ids;
+        names_ids
     }
 }

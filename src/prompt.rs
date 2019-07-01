@@ -1,4 +1,5 @@
 use std::io::{self, Write};
+use super::model::Trello;
 
 pub enum Command {
     Quit,
@@ -27,4 +28,10 @@ pub fn read_command() -> Command {
         read_command()
     }
     
+}
+
+pub fn display_boards(t: &Trello) {
+    for board in t.get_boards() {
+        println!("{}", board.name);
+    }
 }
