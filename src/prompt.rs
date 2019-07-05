@@ -1,10 +1,14 @@
 use std::io::{self, Write};
-use super::model::Trello;
+use super::model::{
+    Trello, Board, List, Card
+};
 
 pub enum Command {
     Quit,
     Help,
-    ListBoards,
+    List,
+    Pwd,
+    MoveBoard(String),
 }
 
 pub fn read_command() -> Command {
@@ -16,17 +20,35 @@ pub fn read_command() -> Command {
     io::stdin().read_line(&mut raw_input).unwrap();
 
     raw_input = raw_input.trim().to_lowercase();
+    let inputs: Vec<&str> = raw_input.split(" ").collect();
 
-    if raw_input == "q" || raw_input == "quit" {
-        Command::Quit
-    } else if raw_input == "h" || raw_input == "help" {
-        Command::Help
-    } else if raw_input == "b" || raw_input == "boards" {
-        Command::ListBoards
-    } else {
-        println!("Not a valid command.");
-        read_command()
+    match inputs[0] {
+        "q" => Command::Quit,
+        "h" => Command::Help,
+        "b" => {
+            if inputs.len() > 1 {
+                Command::MoveBoard(inputs[1].to_string())
+            } else {
+                Command::List
+            }
+        }
+        "pwd" => Command::Pwd,
+        _ => {
+            println!("Not a valid command.");
+            read_command()
+        }
     }
+
+    // if raw_input == "q" || raw_input == "quit" {
+    //     Command::Quit
+    // } else if raw_input == "h" || raw_input == "help" {
+    //     Command::Help
+    // } else if raw_input == "b" || raw_input == "board" {
+    //     Command::List
+    // } else {
+    //     println!("Not a valid command.");
+    //     read_command()
+    // }
     
 }
 

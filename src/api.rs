@@ -8,7 +8,6 @@ extern crate reqwest;
 pub struct Handle {
     key: String,
     token: String,
-    boards: HashMap<String, String>
 }
 
 use std::fmt;
@@ -32,42 +31,44 @@ impl Handle {
 
         // Then deserialize and return new handle
         let json: serde_json::Value = serde_json::from_str(&text).unwrap();
-        let key = format!("{}", json["key"].as_str().unwrap());
-        let token = format!("{}", json["token"].as_str().unwrap());
-        Handle {key, token, boards: HashMap::new()}
+
+        // The verbosity here keeps the quotes off the output string
+        let key = format!("{}", json["key"].as_str().unwrap().to_string()); 
+        let token = format!("{}", json["token"].as_str().unwrap().to_string());
+        Handle {key, token}
     }
 
-    // pub fn get_list_boards(&mut self) -> &HashMap<String, String> {
-    //     if self.boards.is_empty() {
-    //         self.find_boards();
-    //     }
-
-    //     &self.boards
-    // }
-
-    // Prints list of boards from user
-    pub fn find_boards(&mut self) -> HashMap<String, String> {
+    pub fn fetch_boards(&self) -> Result<String, reqwest::Error> {
         let url = format!("https://api.trello.com/1/members/me/boards/?key={key}&token={token}",
                 key = self.key,
                 token = self.token);
-
-        // Make request
-        let text = reqwest::get(&url).unwrap().text().unwrap();
-
-        // Deserialize and find all board names
-        use serde_json::Value;
-        let mut names_ids: HashMap<String, String> = HashMap::new();
-        let json: Value = serde_json::from_str(&text).unwrap();
-        if let Value::Array(v) = json {
-            for board in v {
-                if let Value::Object(o) = board {
-                    let name = o["name"].as_str().unwrap().to_string();
-                    let id = o["id"].as_str().unwrap().to_string();
-                    names_ids.insert(name, id);
-                }
-            }
-        }
-
-        names_ids
+        reqwest::get(&url)?
+            .text()
     }
+
+    // Prints list of boards from user
+    // pub fn find_boards(&mut self) -> HashMap<String, String> {
+    //     let url = format!("https://api.trello.com/1/members/me/boards/?key={key}&token={token}",
+    //             key = self.key,
+    //             token = self.token);
+
+    //     // Make request
+    //     let text = reqwest::get(&url).unwrap().text().unwrap();
+
+    //     // Deserialize and find all board names
+    //     use serde_json::Value;
+    //     let mut names_ids: HashMap<String, String> = HashMap::new();
+    //     let json: Value = serde_json::from_str(&text).unwrap();
+    //     if let Value::Array(v) = json {
+    //         for board in v {
+    //             if let Value::Object(o) = board {
+    //                 let name = o["name"].to_string();
+    //                 let id = o["id"].to_string();
+    //                 names_ids.insert(name, id);
+    //             }
+    //         }
+    //     }
+
+    //     names_ids
+    // }
 }

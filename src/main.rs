@@ -17,9 +17,17 @@ fn main() {
 
         use Command::*;
         match command {
-            ListBoards => {
+            List => {
                 display_boards(&t);
-            }
+            },
+            MoveBoard(name) => {
+                let result = t.update_location(&name);
+                match result {
+                    Ok(_) => println!("Now in {}.", name),
+                    Err(a) => eprintln!("{}", a),
+                }
+            },
+            Pwd => t.print_location(),
             Quit => break,
             Help => {
                 println!("Try entering 'quit'.");
