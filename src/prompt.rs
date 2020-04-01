@@ -23,16 +23,16 @@ pub fn read_command() -> Command {
     let inputs: Vec<&str> = raw_input.split(" ").collect();
 
     match inputs[0] {
-        "q" => Command::Quit,
-        "h" => Command::Help,
-        "b" => {
+        "q" | "quit"=> Command::Quit,
+        "h" | "help" => Command::Help,
+        "b" | "board" => {
             if inputs.len() > 1 {
                 Command::MoveBoard(inputs[1].to_string())
             } else {
                 Command::List
             }
         }
-        "pwd" => Command::Pwd,
+        "p" | "pwd" => Command::Pwd,
         _ => {
             println!("Not a valid command.");
             read_command()

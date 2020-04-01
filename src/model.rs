@@ -46,8 +46,11 @@ impl Trello {
         &self.boards
     }
 
-    pub fn update_location(&mut self, name: &String) -> Result<(), String> {
-        self.path.move_down(&name)
+    pub fn update_board(&mut self, name: &String) -> Result<(), String> {
+        if filter(|b| b.name == name, self.boards).count() > 0 {
+
+        }
+        self.path.set_board(name)
     }
 
     pub fn print_location(&self) {
@@ -113,7 +116,7 @@ impl TrelloPath {
         }
     }
 
-    fn set_board(&mut self, name: &String) -> Result<(), String> {
+    pub fn set_board(&mut self, name: &String) -> Result<(), String> {
         self.board = Some(name.to_string());
         self.list = None;
         self.card = None;

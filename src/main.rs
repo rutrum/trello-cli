@@ -21,7 +21,7 @@ fn main() {
                 display_boards(&t);
             },
             MoveBoard(name) => {
-                let result = t.update_location(&name);
+                let result = t.update_board(&name);
                 match result {
                     Ok(_) => println!("Now in {}.", name),
                     Err(a) => eprintln!("{}", a),
